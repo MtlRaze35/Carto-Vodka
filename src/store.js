@@ -10,6 +10,8 @@ import * as reducers from './reducers';
 //  );
 // }
 
+// {}, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
 export default function configureStore() {
-  return createStore(combineReducers(reducers), {}, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+  return createStore(combineReducers(reducers), {}, applyMiddleware(thunk));
 }

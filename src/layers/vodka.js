@@ -1,4 +1,8 @@
 export default {
+  name: "Vodka Layer",
+
+  visible: true,
+
   cartocss: `
   #layer {
     marker-width: 8;
@@ -11,20 +15,11 @@ export default {
     marker-allow-overlap: false;
   }
 `,
-//   source: `
-//   SELECT
-//    *
-//   FROM 
-//   ne_10m_populated_places_simple
-//   WHERE 
-//   adm0name IN (SELECT admin FROM ne_adm0_europe)
-//   `
-// }
 
-query: `
+  query: `
 SELECT
        *
      FROM
        purvodka_master_attempt2_1
 `
-}
+};
