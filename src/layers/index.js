@@ -1,6 +1,7 @@
-import vodka from "./vodka"
 
-// Export order will be the layer order
+import vodka from './vodka'
+
 export default {
     vodka
+
 }

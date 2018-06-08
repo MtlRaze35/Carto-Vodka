@@ -24,10 +24,7 @@ export const client = (state = cartoClient, action) => state;
 export const map = (state = false, action) => {
   switch(action.type) {
     case actions.SET_MAP :
-     return{
-       ...state,
-       map: action.map
-     }
+     return action.map;
      
        default:
          return state;

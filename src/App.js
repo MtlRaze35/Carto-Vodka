@@ -9,7 +9,7 @@ import { ThemeProvider } from '@carto/airship';
 import logo from "./logo.svg";
 import "./App.css";
 import layers from "./layers/vodka"
-// import vodka from "./layers/vodka"
+import vodka from "./layers/vodka"
 import store from "./store"
 import { simpleAction, setMap, setBboxFilter, storeLayers } from "./actions";
 import Test from "./components/Test";
@@ -64,42 +64,33 @@ class App extends Component {
     ]);
   }
 
-  // setupLayers() {
-
-  //   const cartoSource = new carto.source.SQL(vodka.source);
-  //   const cartoStyle = new carto.style.CartoCSS(vodka.style);
-
-  //     const vodkaLayer = new carto.layer.Layer(cartoSource, cartoStyle, {
-  //       featureOverColumns: ["marque"]
-  //     });
-
-  //     // ??****
-  //   console.log('TEST 1')
-  //   console.log('LAYYER??', vodkaLayer)
-  //   console.log('CLIENT>>', this.props.client)
-  //   console.log('MAP**', this.props.map)
-  //   console.log('STATE:', this.state)
-  //   console.log('PROPS:', this.props)
-  //   this.props.client.getLeafletLayer().addTo(map);
-  //   console.log('TEST 2')
-  //   this.props.client.addLayers(vodkaLayer);
-      
-    
-  //   this.props.storeLayers(vodkaLayer)
-  // }
-
 
   setupLayers() {
     const cartoLayers = Object.keys(layers).reduce((all, layerName) => {
       const { options, ...other} = layers[layerName];
 
-      const source = new carto.source.SQL(other.query);
-      const style = new carto.style.CartoCSS(other.cartocss);
+      const source = new carto.source.SQL(`
+    SELECT
+      *
+    FROM
+    purvodka_master_attempt2_1
+  `);
+      const style = new carto.style.CartoCSS(`
+    #layer {
+          marker-width: ramp([montant_periode_en_cours], range(5, 20), quantiles(5));
+          marker-fill: ramp([montant_tx_croissance_annuel], (#cf597e, #ed9c72, #e9e29c, #71be83, #009392), quantiles);
+          marker-fill-opacity: 1;
+          marker-allow-overlap: true;
+          marker-line-width: 1;
+          marker-line-color: #FFFFFF;
+          marker-line-opacity: 1;
+    }
+  `);
       const layer = new carto.layer.Layer(source, style, options);
 
-      if(options.featureClickColumns) {
-        layer.on('featureClicked', this.openPopup.bind(this));
-      }
+      // if(options.featureClickColumns) {
+      //   layer.on('featureClicked', this.openPopup.bind(this));
+      // }
 
       this.props.client.getLeafletLayer().addTo(this.props.map);
 
@@ -138,7 +129,7 @@ const mapDispatchToProps = dispatch => ({
   simpleAction: () => dispatch(simpleAction()),
   setMap: map => dispatch(setMap(map)),
   setBboxFilter: bbox => dispatch(setBboxFilter(bbox)),
-  storeLayers: vodkaLayer => dispatch(storeLayers(vodkaLayer)),
+  storeLayers: layers => dispatch(storeLayers(layers)),
 });
 
 export default connect(
