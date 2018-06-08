@@ -22,4 +22,8 @@ SELECT
      FROM
        purvodka_master_attempt2_1
 `
+
+// query: "SELECT * FROM purvodka_master_attempt2_1"
+
+
 };

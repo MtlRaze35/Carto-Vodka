@@ -24,10 +24,7 @@ export const client = (state = cartoClient, action) => state;
 export const map = (state = false, action) => {
   switch(action.type) {
     case actions.SET_MAP :
-     return{
-       ...state,
-       map: action.map
-     }
+     return action.map
      
        default:
          return state;
@@ -55,7 +52,7 @@ const FILTERS_INITIAL_STATE = {
 export const filters = (state = FILTERS_INITIAL_STATE, action) => {
   switch (action.type) {
     case actions.SET_BBOX: {
-      console.log(action.neighbourhoods)
+      // console.log(action.neighbourhoods)
       const [ xmin, ymin, xmax, ymax ] = action.bbox;
 
       return {
@@ -71,7 +68,7 @@ export const filters = (state = FILTERS_INITIAL_STATE, action) => {
 export const layers = (state = {}, action) => {
   switch (action.type) {
     case actions.STORE_LAYERS:
-      return action.layers;
+      return action.layers
 
     default:
       return state;

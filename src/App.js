@@ -12,8 +12,8 @@ import store from "./store"
 import { simpleAction, setMap, setBboxFilter, storeLayers } from "./actions";
 import Test from "./components/Test";
 import Widgets from "./components/Widgets";
-// import layers from "./layers"
-import vodka from "./layers/vodka"
+import layers from "./layers"
+// import vodka from "./layers/vodka"
 
 
 const CARTO_BASEMAP =
@@ -53,10 +53,6 @@ class App extends Component {
     if (!prevProps.map && this.props.map) {
       console.log('in')
       this.setupLayers();
-     
-     
-      // console.log('yo')
-      // this.props.client.getLeafletLayer().addTo(this.props.map);
     }
   }
 
@@ -69,78 +65,56 @@ class App extends Component {
     ]);
   }
 
+  // setupLayers() {
+  //   const {client, map} = this.props
+    
+  //   const cartoSource = new carto.source.SQL(vodka.query);
+  //   const cartoStyle = new carto.style.CartoCSS(vodka.cartocss);
+    
+  //   const vodkaLayer = new carto.layer.Layer(cartoSource, cartoStyle, {
+  //     featureOverColumns: ["marque"]
+  //   });
+  //   // ??****
+  //   console.log('TEST 1')
+  //   console.log('STATE:', this.state)
+  //   console.log('TEST 2')
+    
+  //   client.addLayer(vodkaLayer);
+    
+  //   console.log('CLIENT>>', this.props.client)
+  //   console.log('LAYYER??', vodkaLayer)
+  //   console.log('MAP**', this.props.map)
+    
+  //   this.props.storeLayers(vodkaLayer)
+    
+  //   console.log('PROPS:', this.props)
+
+  //   this.props.client.getLeafletLayer().addTo(this.props.map);    
+  // }
+
   setupLayers() {
-    const {client, map} = this.props
-    
-    const cartoSource = new carto.source.SQL(vodka.query);
-    const cartoStyle = new carto.style.CartoCSS(vodka.cartocss);
-    
-    const vodkaLayer = new carto.layer.Layer(cartoSource, cartoStyle, {
-      featureOverColumns: ["marque"]
-    });
-    // ??****
-    console.log('TEST 1')
-    console.log('LAYYER??', vodkaLayer)
-    console.log('MAP**', this.props.map)
-    console.log('STATE:', this.state)
-    console.log('TEST 2')
-    console.log('CLIENT>>', this.props.client)
-    
-    client.addLayer(vodkaLayer); 
-    
-    this.props.storeLayers(vodkaLayer)
-    
-    console.log('PROPS:', this.props)
-    
-    //BREAKS HERE
-    client.getLeafletLayer().addTo(map);    
+    const cartoLayers = Object.keys(layers).reduce((all, layerName) => {
+      const { options, ...other} = layers[layerName];
+
+      const source = new carto.source.SQL(other.query);
+      const style = new carto.style.CartoCSS(other.cartocss);
+      const layer = new carto.layer.Layer(source, style, options);
+
+      // if(options.featureClickColumns) {
+      //   layer.on('featureClicked', this.openPopup.bind(this));
+      // }
+
+      this.props.client.getLeafletLayer().addTo(this.props.map);
+
+      return { ...all, [layerName]: { source, style, layer, ...other } };
+    }, {});
+
+    // Add all layers at the same tame so it doesn't reload multiple times
+    this.props.client.addLayers(Object.values(cartoLayers).map(item => item.layer));
+
+    console.log(cartoLayers)
+    this.props.storeLayers(cartoLayers)
   }
-
-
-
-//   setupLayers() {
-//     const cartoLayers = Object.keys(layers).reduce((all, layerName) => {
-//       const { options, ...other} = layers[layerName];
-
-//       const source = new carto.source.SQL(`
-//       SELECT
-//         *
-//       FROM
-//         purvodka_master_attempt2_1
-//  `);
-//       const style = new carto.style.CartoCSS( `
-//       #layer {
-//         marker-width: 8;
-//         marker-fill: #FF583E;
-//         marker-fill-opacity: 0.9;
-//         marker-line-width: 0.5;
-//         marker-line-color: #FFFFFF;
-//         marker-line-opacity: 1;
-//         marker-type: ellipse;
-//         marker-allow-overlap: false;
-//       }
-//     `);
-//       const layer = new carto.layer.Layer(source, style, options);
-
-//       console.log(options)
-//       // if(options.featureClickColumns) {
-//       //   layer.on('featureClicked', this.openPopup.bind(this));
-//       // }
-
-//       this.props.client.getLeafletLayer().addTo(this.props.map);
-
-//       return { ...all, [layerName]: { source, style, layer, ...other } };
-//     }, {});
-
-//     // Add all layers at the same tame so it doesn't reload multiple times
-//     this.props.client.addLayers(Object.values(cartoLayers).map(item => item.layer));
-
-//     // Labels need to be added after the layers
-//     // L.tileLayer(BASEMAP_LABELS).addTo(this.props.map);
-
-//     this.props.storeLayers(cartoLayers)
-//   }
-
 
   render() {
     const { layers } = this.props;
@@ -150,11 +124,11 @@ class App extends Component {
       <div className="App">
         <div id="map" />
           {hasLayers && (
-            <Test/>
+            <Widgets/> 
           )}
+          <Test/>
           <button onClick={() => console.log(this.state)}> state test</button>
           <button onClick={() => console.log(this.props)}> props test</button>
-        {/* <Widgets/> */}
       </div>
     );
   }

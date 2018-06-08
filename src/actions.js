@@ -6,7 +6,7 @@ export const simpleAction = () => ({
 export const SET_MAP = '@MAP/SET';
 export const setMap = map => ({
   type: SET_MAP,
-  map
+  map,
 });
 
 export const changeData = () => ({
