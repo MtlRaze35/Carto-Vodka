@@ -42,6 +42,10 @@ class GaugeWidget extends Component {
     this.dataCounter()
   }
 
+  componentWillUnmount() {
+    this.dataView.off('dataChanged');
+  }
+
   dataCounter () {
     if (!this.state.count){
       return 0
@@ -62,7 +66,7 @@ class GaugeWidget extends Component {
           maxValue={6500}
           value={this.dataCounter()}
           />
-
+        <button onClick={()=>console.log('Comp Props?', this.props)}> HELLO </button>
     </Widget>
     )
   }
@@ -72,6 +76,7 @@ const mapStateToProps = state => ({
   client: state.client,
   map: state.map,
   layers: state.layers,
+  filters: state.filters
 });
 
 

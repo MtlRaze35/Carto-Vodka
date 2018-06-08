@@ -47,7 +47,7 @@ export const data = (state = {}, action) => {
 const FILTERS_INITIAL_STATE = {
   price: false,
   bbox: false,
-  neighbourhoods: false,
+  brands: false,
 }
 export const filters = (state = FILTERS_INITIAL_STATE, action) => {
   switch (action.type) {
@@ -60,6 +60,22 @@ export const filters = (state = FILTERS_INITIAL_STATE, action) => {
         bbox: `ST_Intersects(the_geom_webmercator, ST_Transform(ST_MakeEnvelope(${xmin}, ${ymin}, ${xmax}, ${ymax}, 4326), 3857))`,
       };
     }
+
+    case actions.SET_BRANDS: {
+      const brands = action.brands.map(name => `'${name}'`).join(',');
+      
+      if (brands.length === 0) return {
+        ...state,
+        brands: false,
+      };
+      console.log(brands)
+
+      return {
+        ...state,
+        brands: `brands IN (${brands})`,
+      };
+    }
+
     default:
       return state;
   }

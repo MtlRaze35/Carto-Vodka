@@ -37,6 +37,10 @@ class CurrentSales extends Component {
     client.addDataview(this.dataView);
   }
 
+  componentWillUnmount() {
+    this.dataView.off('dataChanged');
+  }
+
   onDataChanged = (data) => {
     this.setState(data);
   }
@@ -50,6 +54,7 @@ class CurrentSales extends Component {
         <Widget.Title>Vol. des ventes 12 derniers mois</Widget.Title>
         <Widget.Description>Test</Widget.Description>
           <Display>{ result }$</Display>
+          <button onClick={()=>console.log('Comp Props?', this.props)}> HELLO </button>
       </Widget>
     );
   }
@@ -60,6 +65,7 @@ const mapStateToProps = state => ({
   client: state.client,
   map: state.map,
   layers: state.layers,
+  filters: state.filters
 });
 
 export default connect(mapStateToProps)(CurrentSales);

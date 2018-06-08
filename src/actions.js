@@ -20,6 +20,12 @@ export const setBboxFilter = bbox => ({
   bbox,
 });
 
+export const SET_BRANDS = '@Filters/SET_BRANDS';
+export const setBrands = brands => ({
+  type: SET_BRANDS,
+  brands,
+});
+
 export const STORE_LAYERS = '@Layers/STORE';
 export const storeLayers = layers => ({
   type: STORE_LAYERS,

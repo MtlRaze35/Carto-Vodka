@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import GaugeWidget from './GaugeWidget';
 import CurrentSales from './CurrentSales';
+import Filter from './Filter';
 
 const Widgets = styled.section`
   width: 350px;
@@ -23,6 +24,7 @@ export default () => (
   <Widgets>
     <GaugeWidget/>
     <CurrentSales/>
+    <Filter/>
     {/* HI */}
     {/* <button onClick={()=>console.log('Comp Props?', this.props)}> HELLO </button> */}
   </Widgets>
